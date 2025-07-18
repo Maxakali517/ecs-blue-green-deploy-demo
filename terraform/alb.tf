@@ -67,6 +67,9 @@ resource "aws_lb_listener" "production" {
     target_group_arn = aws_lb_target_group.blue.arn
   }
 
+  lifecycle {
+    ignore_changes = [default_action]  # ECSが管理するため変更を無視
+  }
 }
 
 # Test Listener
@@ -97,6 +100,10 @@ resource "aws_lb_listener_rule" "production" {
     path_pattern {
       values = ["*"]
     }
+  }
+
+  lifecycle {
+    ignore_changes = [action]  # ECSが管理するため変更を無視
   }
 }
 

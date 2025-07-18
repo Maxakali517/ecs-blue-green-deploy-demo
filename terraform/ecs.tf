@@ -46,7 +46,8 @@ resource "aws_ecs_service" "app" {
   name            = var.service_name
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.app.arn
-  desired_count   = 2
+  desired_count   = 1
+  deployment_maximum_percent = 200
   launch_type     = "FARGATE"
 
   deployment_circuit_breaker {
