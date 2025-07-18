@@ -1,0 +1,38 @@
+# Terraform
+terraform/*.tfstate*
+terraform/*.tfstate.backup
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfvars
+
+# Go
+app/*.exe
+app/*.exe~
+app/*.dll
+app/*.so
+app/*.dylib
+app/*.test
+app/*.out
+app/go.work
+app/go.work.sum
+
+# Docker
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
