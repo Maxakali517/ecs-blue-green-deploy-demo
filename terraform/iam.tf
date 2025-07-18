@@ -56,7 +56,7 @@ resource "aws_iam_role" "ecs_blue_green" {
         Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          Service = "ecs-tasks.amazonaws.com"
+          Service = "ecs.amazonaws.com"
         }
       }
     ]
@@ -79,7 +79,8 @@ resource "aws_iam_role_policy" "ecs_blue_green" {
           "elasticloadbalancing:ModifyRule",
           "elasticloadbalancing:DescribeRules",
           "elasticloadbalancing:RegisterTargets",
-          "elasticloadbalancing:DeregisterTargets"
+          "elasticloadbalancing:DeregisterTargets",
+          "elasticloadbalancing:DescribeTargetHealth"
         ]
         Resource = "*"
       }
