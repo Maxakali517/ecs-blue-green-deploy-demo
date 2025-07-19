@@ -1,0 +1,29 @@
+{
+    "family": "blue-green-demo",
+    "executionRoleArn": "${execution_role_arn}",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512",
+    "containerDefinitions": [
+        {
+            "name": "blue-green-demo",
+            "image": "${ecr_repository_url}:latest",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "mountPoints": [],
+            "volumesFrom": []
+        }
+    ],
+    "volumes": [],
+    "placementConstraints": []
+}

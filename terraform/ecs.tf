@@ -11,41 +11,19 @@ resource "aws_ecs_cluster" "main" {
 
 }
 
-# ECS Task Definition
-resource "aws_ecs_task_definition" "app" {
-  family                   = var.service_name
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
-  execution_role_arn       = aws_iam_role.ecs_task_execution.arn
-
-  runtime_platform {
-    operating_system_family = "LINUX"
-    cpu_architecture        = "X86_64"
-  }
-
-  container_definitions = jsonencode([
-    {
-      name  = var.service_name
-      image = "${aws_ecr_repository.app.repository_url}:latest"
-      portMappings = [
-        {
-          containerPort = 8080
-          protocol      = "tcp"
-        }
-      ]
-      essential = true
-    }
-  ])
-
+# ECS Task Definition from file
+locals {
+  task_definition = templatefile("${path.module}/task-definition.json", {
+    execution_role_arn = aws_iam_role.ecs_task_execution.arn
+    ecr_repository_url = aws_ecr_repository.app.repository_url
+  })
 }
 
 # ECS Service with Blue/Green Deployment
 resource "aws_ecs_service" "app" {
   name                       = var.service_name
   cluster                    = aws_ecs_cluster.main.id
-  task_definition            = aws_ecs_task_definition.app.arn
+  task_definition            = local.task_definition
   desired_count              = 1
   deployment_maximum_percent = 200
   launch_type                = "FARGATE"

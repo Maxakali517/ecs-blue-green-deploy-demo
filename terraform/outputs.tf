@@ -70,9 +70,9 @@ output "ecr_repository_url" {
   value       = aws_ecr_repository.app.repository_url
 }
 
-output "task_definition_arn" {
-  description = "ARN of the task definition"
-  value       = aws_ecs_task_definition.app.arn
+output "task_definition_content" {
+  description = "Task definition content from file"
+  value       = local.task_definition
 }
 
 # Health Check Lambda outputs
