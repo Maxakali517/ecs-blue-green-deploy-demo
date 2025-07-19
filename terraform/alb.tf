@@ -63,12 +63,13 @@ resource "aws_lb_listener" "production" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.blue.arn
-  }
+    type = "fixed-response"
 
-  lifecycle {
-    ignore_changes = [default_action] # ECSが管理するため変更を無視
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "NOT FOUND"
+      status_code  = "404"
+    }
   }
 }
 
@@ -79,8 +80,13 @@ resource "aws_lb_listener" "test" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.green.arn
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "NOT FOUND"
+      status_code  = "404"
+    }
   }
 
 }
