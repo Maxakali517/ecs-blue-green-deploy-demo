@@ -83,8 +83,41 @@ resource "aws_iam_role_policy" "ecs_blue_green" {
           "elasticloadbalancing:DescribeTargetHealth"
         ]
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "lambda:InvokeFunction"
+        ]
+        Resource = aws_lambda_function.health_check_test.arn
       }
     ]
   })
 }
+
+# Lambda Health Check IAM Role
+resource "aws_iam_role" "lambda_health_check" {
+  name = "${var.service_name}-lambda-health-check-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Project   = "ecs-blue-green-demo"
+    Service   = var.service_name
+    ManagedBy = "terraform"
+  }
+}
+
+# Lambda Health Check IAM Policy
 

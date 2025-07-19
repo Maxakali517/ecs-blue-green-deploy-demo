@@ -43,12 +43,12 @@ resource "aws_ecs_task_definition" "app" {
 
 # ECS Service with Blue/Green Deployment
 resource "aws_ecs_service" "app" {
-  name            = var.service_name
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.app.arn
-  desired_count   = 1
+  name                       = var.service_name
+  cluster                    = aws_ecs_cluster.main.id
+  task_definition            = aws_ecs_task_definition.app.arn
+  desired_count              = 1
   deployment_maximum_percent = 200
-  launch_type     = "FARGATE"
+  launch_type                = "FARGATE"
 
   deployment_circuit_breaker {
     enable   = true
@@ -58,6 +58,12 @@ resource "aws_ecs_service" "app" {
   deployment_configuration {
     strategy             = "BLUE_GREEN"
     bake_time_in_minutes = 5
+
+    lifecycle_hook {
+      hook_target_arn  = aws_lambda_function.health_check_test.arn
+      role_arn         = aws_iam_role.ecs_blue_green.arn
+      lifecycle_stages = ["POST_TEST_TRAFFIC_SHIFT"]
+    }
   }
 
   load_balancer {

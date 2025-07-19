@@ -68,7 +68,7 @@ resource "aws_lb_listener" "production" {
   }
 
   lifecycle {
-    ignore_changes = [default_action]  # ECSが管理するため変更を無視
+    ignore_changes = [default_action] # ECSが管理するため変更を無視
   }
 }
 
@@ -103,7 +103,7 @@ resource "aws_lb_listener_rule" "production" {
   }
 
   lifecycle {
-    ignore_changes = [action]  # ECSが管理するため変更を無視
+    ignore_changes = [action] # ECSが管理するため変更を無視
   }
 }
 

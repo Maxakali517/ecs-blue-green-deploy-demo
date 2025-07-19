@@ -74,3 +74,10 @@ output "task_definition_arn" {
   description = "ARN of the task definition"
   value       = aws_ecs_task_definition.app.arn
 }
+
+# Health Check Lambda outputs
+output "health_check_lambda_arn" {
+  description = "ARN of the health check Lambda function"
+  value       = aws_lambda_function.health_check_test.arn
+}
+
