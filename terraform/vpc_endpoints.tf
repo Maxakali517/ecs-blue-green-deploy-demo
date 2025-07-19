@@ -43,27 +43,35 @@ resource "aws_security_group" "vpc_endpoint" {
   name        = "${var.service_name}-vpc-endpoint-sg"
   description = "Security group for VPC endpoints"
   vpc_id      = module.vpc.vpc_id
+}
 
-  ingress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ecs.id]
-    description     = "Allow HTTPS from ECS tasks"
-  }
+# Security Group Rules for VPC Endpoints
+resource "aws_security_group_rule" "vpc_endpoint_ingress_ecs" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.ecs.id
+  security_group_id        = aws_security_group.vpc_endpoint.id
+  description              = "Allow HTTPS from ECS tasks"
+}
 
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = [module.vpc.vpc_cidr_block]
-    description = "Allow HTTPS from VPC"
-  }
+resource "aws_security_group_rule" "vpc_endpoint_ingress_vpc" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = [module.vpc.vpc_cidr_block]
+  security_group_id = aws_security_group.vpc_endpoint.id
+  description       = "Allow HTTPS from VPC"
+}
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+resource "aws_security_group_rule" "vpc_endpoint_egress_all" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.vpc_endpoint.id
+  description       = "Allow all outbound traffic"
 }
